@@ -1,6 +1,6 @@
 # Hotel Management System Backend
 
-This is the backend for the Hotel Management System, built using Node.js and Express.
+This is the backend for the Hotel Management System, built using Node.js, Express and prisma with postgres.
 
 ## Table of Contents
 
@@ -15,7 +15,7 @@ This is the backend for the Hotel Management System, built using Node.js and Exp
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/hotel-management-system-backend.git
+    git clone https://github.com/gadisaka04/hotel-management-system-backend.git
     ```
 2. Navigate to the project directory:
     ```sh
@@ -30,7 +30,7 @@ This is the backend for the Hotel Management System, built using Node.js and Exp
 
 1. Start the server:
     ```sh
-    npm start
+    npm run dev
     ```
 2. The server will run on `http://localhost:3000`.
 
@@ -54,6 +54,9 @@ This is the backend for the Hotel Management System, built using Node.js and Exp
 4. Commit your changes (`git commit -m 'Add some feature'`).
 5. Push to the branch (`git push origin feature-branch`).
 6. Open a pull request.
+
+
+feel free to reach out for any suggestions : gadisaka@gmail.com
 
 ## License
 
