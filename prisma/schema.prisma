@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+
+model Employee {
+  id             String    @id @default(cuid())
+  firstName      String
+  lastName       String
+  image          String?
+  sex            Sex
+  password       String?
+  salary         Float
+  role           Role
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  phone          String   @unique
+  birthDate      DateTime?
+  username       String?   @unique
+}
+
+model Room {
+  id        String     @id @default(cuid())
+  number    Int     @unique
+  floor     Int
+  type      RoomType
+  price     Float
+  status    RoomStatus
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  bookings  Booking[]
+}
+
+model Customer {
+  id           String         @id @default(cuid())
+  firstName    String
+  lastName     String
+  phone        String  @unique
+  sex          Sex
+  status       CustomerStatus? @default(INACTIVE)
+  idCardImage  String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  disabilities Disability     @default(NONE)
+  bookings     Booking[]
+}
+
+model Booking {
+  id         String   @id @default(cuid())
+  customerId String
+  roomId     String
+  startDate  DateTime 
+  endDate    DateTime
+  payment    Float
+  status     BookingStatus @default(PENDING)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  customer   Customer @relation(fields: [customerId], references: [id])
+  room       Room     @relation(fields: [roomId], references: [id])
+}
+
+enum BookingStatus { 
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
+
+enum Role {
+  ADMIN
+  RECEPTIONIST
+  GUARD
+  JANITOR
+  CHEF
+  WAITER
+}
+
+enum Sex {
+  MALE
+  FEMALE
+}
+
+enum Disability {
+  NONE
+  BLIND
+  DEAF
+  OTHER
+}
+
+enum RoomType {
+  SINGLE
+  DOUBLE
+  TRIPLE
+  VIP
+}
+
+enum RoomStatus {
+  AVAILABLE
+  OCCUPIED
+  RESERVED
+  MAINTENANCE
+  CLEANING
+  UNAVAILABLE
+}
+
+enum CustomerStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
