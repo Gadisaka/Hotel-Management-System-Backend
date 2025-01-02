@@ -1,4 +1,5 @@
 import prisma from "../prisma/prismaClient.js";
+import bcrypt from "bcryptjs";
 
 export const createEmployee = async (req, res) => {
   const { password } = req.body;
@@ -42,7 +43,8 @@ export const getEmployeeById = async (req, res) => {
   const employee = await prisma.employee.findMany({
     where: { id: id },
   });
-  res.json(employee);
+  const { password, ...employeeWithoutPassword } = employee;
+  res.json(employeeWithoutPassword);
 };
 
 export const updateEmployee = async (req, res) => {
@@ -94,6 +96,6 @@ export const getEmployeeByName = async (req, res) => {
       ],
     },
   });
-
-  res.json(employees);
+  const { password, ...employeeWithoutPassword } = employee;
+  res.json(employeeWithoutPassword);
 };

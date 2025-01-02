@@ -4,7 +4,8 @@ import EmployeeRoutes from "./routes/employee.routes.js";
 import bookingRoutes from "./routes/booking.routes.js";
 import RoomRoutes from "./routes/room.routes.js";
 import CustomerRoutes from "./routes/customer.routes.js";
-import "./cron/updateStatus.js";
+import authRoutes from "./auth/auth.js";
+import "./thread/updateStatus.js";
 
 const app = express();
 const port = 3000;
@@ -12,6 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // for parsing application/json
 // app.use(cors());
 
+app.use("/auth", authRoutes);
 app.use("/employee", EmployeeRoutes);
 app.use("/room", RoomRoutes);
 app.use("/customer", CustomerRoutes);
