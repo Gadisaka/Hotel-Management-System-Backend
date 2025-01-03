@@ -9,7 +9,6 @@ export const createEmployee = async (req, res) => {
     hashedPassword = await bcrypt.hash(password, 10);
   }
 
-  // check if phone number already exists
   const employee = await prisma.employee.findUnique({
     where: {
       phone: req.body.phone,

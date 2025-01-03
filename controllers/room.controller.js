@@ -1,7 +1,6 @@
 import prisma from "../prisma/prismaClient.js";
 
 export const createRoom = async (req, res) => {
-  //check if room number already exists
   const { number, floor, type, price, status } = req.body;
 
   const room = await prisma.room.findUnique({
@@ -110,7 +109,6 @@ export const createMultipleRooms = async (req, res) => {
   }
 
   try {
-    // Begin a transaction to ensure all inserts succeed or rollback
     await prisma.$transaction(
       async (prisma) => {
         const roomPromises = Array.from({ length: count }, (_, index) =>
@@ -138,8 +136,6 @@ export const createMultipleRooms = async (req, res) => {
       .json({ error: error.message, message: "Error creating multiple rooms" });
   }
 };
-
-//to update room status when occupied , reserved or active
 export const changeRoomStatus = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;

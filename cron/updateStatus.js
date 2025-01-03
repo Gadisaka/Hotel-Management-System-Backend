@@ -45,7 +45,6 @@ const updateStatuses = async () => {
   }
 };
 
-// Schedule the function to run every minute
 cron.schedule("*/30 * * * *", () => {
   updateStatuses();
 });
