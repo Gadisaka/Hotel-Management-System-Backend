@@ -75,8 +75,34 @@ export const createBooking = async (req, res) => {
 };
 
 export const getAllBookings = async (req, res) => {
-  const bookings = await prisma.booking.findMany();
-  res.json(bookings);
+  try {
+    const bookings = await prisma.booking.findMany();
+    const bookingsWithDetails = await Promise.all(
+      bookings.map(async (booking) => {
+        const room = await prisma.room.findFirst({
+          where: {
+            id: booking.roomId,
+          },
+        });
+        const customer = await prisma.customer.findFirst({
+          where: {
+            id: booking.customerId,
+          },
+        });
+        const fullName = customer.firstName + " " + customer.lastName;
+        return {
+          ...booking,
+          roomNumber: room.number,
+          customerName: fullName,
+        };
+      })
+    );
+    res.json({ bookings: bookingsWithDetails });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: error.message, message: "Error fetching bookings" });
+  }
 };
 
 export const getById = async (req, res, next) => {
@@ -114,9 +140,11 @@ export const changeStatus = async (req, res) => {
         message: "booking unavailable",
       });
     }
-    res
-      .status(201)
-      .json({ message: "status changed successfull", booking: booking });
+    res.status(201).json({
+      message: "status changed successfull",
+      booking: booking,
+      customer: booking.customer,
+    });
   } catch (error) {
     res.status(500).json({ error: error, message: "error changing status" });
   }
@@ -132,12 +160,10 @@ export const deleteBooking = async (req, res) => {
       },
     });
     if (isConfirmed) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "booking must be pending , cancelled or completed to be deleted",
-        });
+      return res.status(400).json({
+        message:
+          "booking must be pending , cancelled or completed to be deleted",
+      });
     }
 
     await prisma.booking.delete({

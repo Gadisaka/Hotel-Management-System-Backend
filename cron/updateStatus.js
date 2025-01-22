@@ -45,11 +45,11 @@ const updateStatuses = async () => {
   }
 };
 
-cron.schedule("*/30 * * * *", () => {
+cron.schedule("* * * * *", () => {
   updateStatuses();
 });
 
-// "* * * *" means: "At every minute past every hour from 0 through 23."
+// "* * * * *" means: "At every minute past every hour from 0 through 23."
 // "*/30 * * * *" means: "At every 30th minute past every hour from 0 through 23."
 // "0 0 * * *" means: "At 00:00 on every day-of-month from 1 through 31 and every month from 1 through 12."
 // "0 0 * * 0" means: "At 00:00 on Sunday."
