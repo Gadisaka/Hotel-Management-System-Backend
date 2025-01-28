@@ -1,5 +1,5 @@
 import express from "express";
-// import cors from "cors";
+import cors from "cors";
 import EmployeeRoutes from "./routes/employee.routes.js";
 import bookingRoutes from "./routes/booking.routes.js";
 import RoomRoutes from "./routes/room.routes.js";
@@ -11,6 +11,7 @@ const app = express();
 const port = 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors());
 
 app.use("/auth", authRoutes);
 app.use("/employee", EmployeeRoutes);
