@@ -1,7 +1,7 @@
 import prisma from "../prisma/prismaClient.js";
 
 export const createBooking = async (req, res) => {
-  const { customer, room, startDate, endDate, payment } = req.body;
+  const { customer, room, startDate, endDate } = req.body;
 
   const isRoomTaken = await prisma.booking.findFirst({
     where: {
@@ -38,7 +38,7 @@ export const createBooking = async (req, res) => {
         },
         startDate,
         endDate,
-        payment,
+        payment: isRoomUnavailable.price,
         status: "CONFIRMED",
       },
     });
@@ -116,7 +116,21 @@ export const getById = async (req, res, next) => {
     if (!booking) {
       return res.status(400).json({ message: "booking unavailable" });
     }
-    res.status(201).json({ message: "booking found", booking: booking });
+    const room = await prisma.room.findFirst({
+      where: {
+        id: booking.roomId,
+      },
+    });
+    const customer = await prisma.customer.findFirst({
+      where: {
+        id: booking.customerId,
+      },
+    });
+    const fullName = customer.firstName + " " + customer.lastName;
+    res.status(201).json({
+      message: "booking found",
+      booking: { ...booking, roomNumber: room.number, customerName: fullName },
+    });
   } catch (error) {
     res.status(500).json({ error: error, message: "booking unavailable" });
   }
@@ -143,7 +157,7 @@ export const changeStatus = async (req, res) => {
     res.status(201).json({
       message: "status changed successfull",
       booking: booking,
-      customer: booking.customer,
+      customer: booking.customerName,
     });
   } catch (error) {
     res.status(500).json({ error: error, message: "error changing status" });
@@ -189,7 +203,9 @@ export const checkOut = async (req, res) => {
       },
     });
 
-    res.status(201).json({ message: "booking checkout successfull" });
+    res
+      .status(201)
+      .json({ message: "booking checkout successfull", booking: booking });
   } catch (err) {
     req.status(500).json({ message: "error checkout booking ", error: err });
   }

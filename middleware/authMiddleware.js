@@ -26,20 +26,12 @@ export const authorizeRole = (role) => (req, res, next) => {
   next();
 };
 
-export const authorizeRoleWithExceptions = (
-  allowedRoles,
-  exceptionCallback
-) => {
+export const authorizeRoleWithExceptions = (roles, exception) => {
   return (req, res, next) => {
-    const userRole = req.user.role;
-
-    if (allowedRoles.includes(userRole)) {
-      if (exceptionCallback && exceptionCallback(req)) {
-        return next();
-      }
-      return next();
+    if (exception(req) || roles.includes(req.user.role)) {
+      next();
+    } else {
+      res.status(403).json({ message: "Access denied" });
     }
-
-    return res.status(403).json({ message: "Access denied." });
   };
 };
