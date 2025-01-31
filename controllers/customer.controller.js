@@ -38,9 +38,24 @@ export const getAllCustomers = async (req, res) => {
           customerId: customer.id,
         },
       });
+      // add room number to booking
+      const bookingsWithRoomNumber = await Promise.all(
+        bookings.map(async (booking) => {
+          const room = await prisma.room.findFirst({
+            where: {
+              id: booking.roomId,
+            },
+          });
+          return {
+            ...booking,
+            roomNumber: room.number,
+          };
+        })
+      );
+
       return {
         ...customer,
-        bookingHistory: bookings,
+        bookingHistory: bookingsWithRoomNumber,
       };
     })
   );
