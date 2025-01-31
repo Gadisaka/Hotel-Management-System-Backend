@@ -30,7 +30,24 @@ export const createCustomer = async (req, res) => {
 
 export const getAllCustomers = async (req, res) => {
   const customers = await prisma.customer.findMany();
-  res.json(customers);
+  // with booking history
+  const customersWithBookings = await Promise.all(
+    customers.map(async (customer) => {
+      const bookings = await prisma.booking.findMany({
+        where: {
+          customerId: customer.id,
+        },
+      });
+      return {
+        ...customer,
+        bookingHistory: bookings,
+      };
+    })
+  );
+
+  res.json(customersWithBookings);
+
+  // res.json(customers);
 };
 
 export const getCustomerById = async (req, res) => {
