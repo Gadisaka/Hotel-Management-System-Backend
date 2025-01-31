@@ -3,14 +3,14 @@ import prisma from "../prisma/prismaClient.js";
 export const createBooking = async (req, res) => {
   const { customer, room, startDate, endDate } = req.body;
 
-  const isRoomTaken = await prisma.booking.findFirst({
-    where: {
-      roomId: room,
-    },
-  });
-  if (isRoomTaken) {
-    return res.status(409).json({ message: "room is already taken" });
-  }
+  // const isRoomTaken = await prisma.booking.findFirst({
+  //   where: {
+  //     roomId: room,
+  //   },
+  // });
+  // if (isRoomTaken) {
+  //   return res.status(409).json({ message: "room is already taken" });
+  // }
 
   const isRoomUnavailable = await prisma.room.findFirst({
     where: {
@@ -94,6 +94,7 @@ export const getAllBookings = async (req, res) => {
           ...booking,
           roomNumber: room.number,
           customerName: fullName,
+          customerStatus: customer.status,
         };
       })
     );
