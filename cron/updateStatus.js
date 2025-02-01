@@ -20,10 +20,10 @@ const updateStatuses = async () => {
       const { id } = booking;
 
       await prisma.$transaction([
-        prisma.booking.update({
-          where: { id },
-          data: { status: "COMPLETED" },
-        }),
+        // prisma.booking.update({
+        //   where: { id },
+        //   data: { status: "COMPLETED" },
+        // }),
 
         // Update room status to 'active'
         // prisma.room.update({
@@ -32,10 +32,10 @@ const updateStatuses = async () => {
         // }),
 
         // Update customer status to 'inactive'
-        // prisma.customer.update({
-        //   where: { id: customerId },
-        //   data: { status: "inactive" },
-        // }),
+        prisma.customer.update({
+          where: { id: customerId },
+          data: { status: "INACTIVE" },
+        }),
       ]);
     }
 
