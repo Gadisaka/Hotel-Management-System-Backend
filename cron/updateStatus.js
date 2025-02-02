@@ -33,8 +33,8 @@ const updateStatuses = async () => {
 
         // Update customer status to 'inactive'
         prisma.customer.update({
-          where: { id: customerId },
-          data: { status: "INACTIVE" },
+          where: { id: booking.customerId },
+          data: { status: "active" },
         }),
       ]);
     }

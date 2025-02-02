@@ -141,12 +141,12 @@ export const changeStatus = async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
   try {
-    const booking = await prisma.booking.findFirst({
+    const booking = await prisma.booking.update({
       where: {
         id: id,
-        updatedAt: {
-          status: status,
-        },
+      },
+      data: {
+        status: status,
       },
     });
 
